@@ -1,0 +1,205 @@
+diff -u -r poco-1.4.2p1/Foundation//include/Poco/ThreadPool.h poco-1.4.2p1-patched/Foundation//include/Poco/ThreadPool.h
+--- poco-1.4.2p1/Foundation//include/Poco/ThreadPool.h	2011-09-24 01:06:35.000000000 -0700
++++ poco-1.4.2p1-patched/Foundation//include/Poco/ThreadPool.h	2011-10-13 23:30:15.271275770 -0700
+@@ -175,6 +175,12 @@
+ 		/// or an empty string if no name has been
+ 		/// specified in the constructor.
+ 
++	bool waitForAvailable(long milliseconds = 0);
++		/// Blocks the calling thread until there is
++		/// A thread available in the ThreadPool.
++		/// Returns true if a thread became available, false
++		/// if we timed out.
++
+ 	static ThreadPool& defaultPool();
+ 		/// Returns a reference to the default
+ 		/// thread pool.
+@@ -200,6 +206,10 @@
+ 	int _stackSize;
+ 	ThreadVec _threads;
+ 	mutable FastMutex _mutex;
++
++	Event _availableEvent;
++
++	friend class PooledThread;
+ };
+ 
+ 
+diff -u -r poco-1.4.2p1/Foundation//src/ThreadPool.cpp poco-1.4.2p1-patched/Foundation//src/ThreadPool.cpp
+--- poco-1.4.2p1/Foundation//src/ThreadPool.cpp	2011-09-24 01:06:35.000000000 -0700
++++ poco-1.4.2p1-patched/Foundation//src/ThreadPool.cpp	2011-10-13 23:30:44.083276388 -0700
+@@ -53,7 +53,7 @@
+ class PooledThread: public Runnable
+ {
+ public:
+-	PooledThread(const std::string& name, int stackSize = POCO_THREAD_STACK_SIZE);
++	PooledThread(ThreadPool* owner, const std::string& name, int stackSize = POCO_THREAD_STACK_SIZE);
+ 	~PooledThread();
+ 
+ 	void start();
+@@ -67,6 +67,7 @@
+ 	void run();
+ 
+ private:
++	ThreadPool*          _owner;
+ 	volatile bool        _idle;
+ 	volatile std::time_t _idleTime;
+ 	Runnable*            _pTarget;
+@@ -79,7 +80,8 @@
+ };
+ 
+ 
+-PooledThread::PooledThread(const std::string& name, int stackSize): 
++PooledThread::PooledThread(ThreadPool* owner, const std::string& name, int stackSize): 
++	_owner(owner),
+ 	_idle(true), 
+ 	_idleTime(0), 
+ 	_pTarget(0), 
+@@ -236,6 +238,7 @@
+ 			_idle     = true;
+ 			_targetCompleted.set();
+ 			ThreadLocalStorage::clear();
++			_owner->_availableEvent.set();
+ 			_thread.setName(_name);
+ 			_thread.setPriority(Thread::PRIO_NORMAL);
+ 		}
+@@ -257,7 +260,8 @@
+ 	_idleTime(idleTime),
+ 	_serial(0),
+ 	_age(0),
+-	_stackSize(stackSize)
++	_stackSize(stackSize),
++	_availableEvent(false)
+ {
+ 	poco_assert (minCapacity >= 1 && maxCapacity >= minCapacity && idleTime > 0);
+ 
+@@ -267,6 +271,8 @@
+ 		_threads.push_back(pThread);
+ 		pThread->start();
+ 	}
++
++	_availableEvent.set();
+ }
+ 
+ 
+@@ -281,7 +287,8 @@
+ 	_idleTime(idleTime),
+ 	_serial(0),
+ 	_age(0),
+-	_stackSize(stackSize)
++	_stackSize(stackSize),
++	_availableEvent(false)
+ {
+ 	poco_assert (minCapacity >= 1 && maxCapacity >= minCapacity && idleTime > 0);
+ 
+@@ -291,6 +298,8 @@
+ 		_threads.push_back(pThread);
+ 		pThread->start();
+ 	}
++
++	_availableEvent.set();
+ }
+ 
+ 
+@@ -405,12 +414,22 @@
+ 	housekeep();
+ }
+ 
++bool ThreadPool::waitForAvailable(long milliseconds)
++{
++	if (milliseconds) {
++		return _availableEvent.tryWait(milliseconds);
++	}
++	_availableEvent.wait();
++	return true;
++}
+ 
+ void ThreadPool::housekeep()
+ {
+ 	_age = 0;
+-	if (_threads.size() <= _minCapacity)
++	if (_threads.size() <= _minCapacity) {
++		_availableEvent.set();
+ 		return;
++	}
+ 
+ 	ThreadVec idleThreads;
+ 	ThreadVec expiredThreads;
+@@ -444,6 +463,12 @@
+ 		else (*it)->release();
+ 	}
+ 	_threads.insert(_threads.end(), activeThreads.begin(), activeThreads.end());
++
++	if (activeThreads.size() < _maxCapacity) {
++		_availableEvent.set();
++	} else {
++		_availableEvent.reset();
++	}
+ }
+ 
+ 
+@@ -463,6 +488,9 @@
+ 	{
+ 		if (_threads.size() < _maxCapacity)
+ 		{
++			if (_threads.size() + 1 == _maxCapacity) {
++				_availableEvent.reset();
++			}
+             pThread = createThread();
+             try
+             {
+@@ -471,12 +499,15 @@
+             }
+             catch (...)
+             {
++		_availableEvent.set();
+                 delete pThread;
+                 throw;
+             }
+ 		}
+ 		else throw NoThreadAvailableException();
+ 	}
++
++
+ 	pThread->activate();
+ 	return pThread;
+ }
+@@ -486,7 +517,7 @@
+ {
+ 	std::ostringstream name;
+ 	name << _name << "[#" << ++_serial << "]";
+-	return new PooledThread(name.str(), _stackSize);
++	return new PooledThread(this, name.str(), _stackSize);
+ }
+ 
+ 
+diff -u -r poco-1.4.2p1/Foundation//testsuite/src/ThreadPoolTest.cpp poco-1.4.2p1-patched/Foundation//testsuite/src/ThreadPoolTest.cpp
+--- poco-1.4.2p1/Foundation//testsuite/src/ThreadPoolTest.cpp	2011-09-24 01:06:36.000000000 -0700
++++ poco-1.4.2p1-patched/Foundation//testsuite/src/ThreadPoolTest.cpp	2011-10-13 22:45:35.493142192 -0700
+@@ -76,6 +76,10 @@
+ 	assert (pool.capacity() == 4);
+ 	assert (pool.available() == 3);
+ 
++	// Should always be signalled available.
++	assert (pool.waitForAvailable());
++	assert (pool.waitForAvailable());
++
+ 	pool.start(ra);
+ 	assert (pool.allocated() == 2);
+ 	assert (pool.used() == 2);
+@@ -108,8 +112,15 @@
+ 	}
+ 	
+ 	_event.set(); // go!!!
++
++	assert (pool.waitForAvailable());
++	assert (pool.available() > 0);
++
+ 	pool.joinAll();
+ 	
++	assert (pool.waitForAvailable());
++	assert (pool.available() == 4);
++
+ 	assert (_count == 40000);
+ 	
+ 	assert (pool.allocated() == 4);
