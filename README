@@ -18,3 +18,8 @@ What this isn't --
 Anywhere close to a full OpenCL implementation...I was mostly wanting to
 sketch out for myself how some of the pieces fit together.
 
+Inspirations --
+Also check out Clover, a Mesa OpenCL driver project.
+http://cgit.freedesktop.org/mesa/clover
+http://cgit.freedesktop.org/~steckdenis/clover
+
