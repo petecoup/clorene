@@ -1,0 +1,20 @@
+What am I --
+clorene, a simple OpenCL driver for the CPU.
+Work in Progress, tinkering around with building an OpenCL runtime.
+
+Prerequisites --
+* Poco, v1.4.2p1, available at:
+https://sourceforge.net/projects/poco/files/sources/poco-1.4.2/poco-1.4.2p1.tar.gz/download
+(I have a local patch for certain functionality which may appear soon).
+* LLVM/Clang, from svn (see http://llvm.org)
+* waf build tool (1.6.8)
+* Google Test (gtest) for tests.
+
+Why --
+There are a lot of interesting tools involved, and I am becoming more
+and more of an LLVM fan.  And, its fun!
+
+What this isn't --
+Anywhere close to a full OpenCL implementation...I was mostly wanting to
+sketch out for myself how some of the pieces fit together.
+
