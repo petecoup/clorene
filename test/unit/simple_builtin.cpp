@@ -37,7 +37,7 @@ protected:
     {
         val_[0] = -99;
         val_[1] = -88;
-        program_ = "int get_global_id(); void fill(float* a) { int i = get_global_id(); a[i] = i; }\n";
+        program_ = "void fill(float* a) { int i = get_global_id(); a[i] = i; }\n";
 
         args_.push_back(llvm::GenericValue((void*)(&val_)));
     }

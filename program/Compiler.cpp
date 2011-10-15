@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 
+
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/Target/TargetOptions.h>
 #include <llvm/Support/Host.h>
@@ -28,9 +29,12 @@
 #include <clang/Frontend/TextDiagnosticPrinter.h>
 #include <clang/CodeGen/CodeGenAction.h>
 #include <clang/Basic/TargetInfo.h>
+
 #include "Program.h"
 #include "Kernel.h"
 #include "Compiler.h"
+#include "platform/PlatformStdlib.opencl.h"
+
 
 namespace clorene
 {
@@ -64,8 +68,12 @@ Compiler::init()
 llvm::Module*
 Compiler::compile(const std::string& program_)
 {
+    std::string header(RUNTIME_HEADER);
+
+    std::string prf = header + program_;
+
     llvm::MemoryBuffer* bufptr
-        = llvm::MemoryBuffer::getMemBuffer(program_);
+        = llvm::MemoryBuffer::getMemBuffer(prf);
 
     clang::FrontendOptions& frontend = clang_->getFrontendOpts();
     frontend.Inputs.push_back(

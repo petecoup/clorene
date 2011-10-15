@@ -36,8 +36,7 @@ protected:
         for(size_t i = 0; i < 16; i++) {
             vals_[i] = i;
         }
-        program_ = "int get_global_id();\n"
-                   "__kernel void square(float *io)"
+        program_ = "__kernel void square(float *io)"
                    "{ int i = get_global_id(); io[i] = io[i] * io[i]; }\n";
         programcstr_ = program_.c_str();
     }
