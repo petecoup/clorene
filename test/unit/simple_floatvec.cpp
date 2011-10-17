@@ -30,26 +30,29 @@
 #include "runtime/FunctionRunner.h"
 #include "runtime/Engine.h"
 
-class SimpleBuiltinTest: public ::testing::Test
+class SimpleFloatVecTest : public ::testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        val_[0] = -99;
-        val_[1] = -88;
-        program_ = "void fill(float* a) { int i = get_global_id(0); a[i] = i; }\n";
+        val_[0] = -3;
+        val_[1] = -5;
+        program_ = "float add(float2 vec) { return vec[0] + vec[1]; }\n"
+                   "void fill(float* a, float* b)\n"
+                   "{ float2 av; av[0] = a[0]; av[1] = a[1]; *b = add(av); }\n";
 
         args_.push_back(llvm::GenericValue((void*)(&val_)));
+        args_.push_back(llvm::GenericValue((void*)(&res_)));
     }
 
     llvm::LLVMContext ctxt_;
     std::string program_;
     float val_[2];
-
+    float res_;
     std::vector<llvm::GenericValue> args_;
 };
 
-TEST_F(SimpleBuiltinTest, CompileAndRun)
+TEST_F(SimpleFloatVecTest, CompileAndRun)
 {
     clorene::Compiler compiler;
 
@@ -61,13 +64,11 @@ TEST_F(SimpleBuiltinTest, CompileAndRun)
 
     runner.setArgs(args_);
 
-    clorene::Engine e(2);
+    clorene::Engine e(1);
     e.addWorker(&runner, 0);
-    e.addWorker(&runner, 1);
 
     e.waitForIdle();
 
-    EXPECT_EQ(val_[0], 0);
-    EXPECT_EQ(val_[1], 1);
+    EXPECT_EQ(res_, -8);
 }
 

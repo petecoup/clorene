@@ -22,18 +22,22 @@
 
 #include <iostream>
 
+#include "platform/PlatformStdlib.h"
+
 #include "Runtime.h"
 #include "Worker.h"
 
-int get_global_id()
+int get_global_id(int work_dim)
 {
     return clorene::Worker::getID();
 }
 
 void* lookup_function(const std::string& name)
 {
-    if (name == "get_global_id")
-        return (void*)&get_global_id;
+    if (name == "get_global_id") {
+        //Why is this cast needed?
+        return (void*)(int (*)(int))&get_global_id;
+    }
     std::cerr << "Did not find funtion " << name << std::endl;
     return NULL;
 }

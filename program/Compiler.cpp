@@ -68,7 +68,7 @@ Compiler::init()
 llvm::Module*
 Compiler::compile(const std::string& program_)
 {
-    std::string header(RUNTIME_HEADER);
+    std::string header(OPENCL_STDHEADER);
 
     std::string prf = header + program_;
 

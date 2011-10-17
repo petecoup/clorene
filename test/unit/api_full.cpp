@@ -37,7 +37,7 @@ protected:
             vals_[i] = i;
         }
         program_ = "__kernel void square(float *io)"
-                   "{ int i = get_global_id(); io[i] = io[i] * io[i]; }\n";
+                   "{ int i = get_global_id(0); io[i] = io[i] * io[i]; }\n";
         programcstr_ = program_.c_str();
     }
 

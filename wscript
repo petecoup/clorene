@@ -27,6 +27,7 @@ unittest_srcs = ['api_full.cpp',
                  'driver.cpp',
                  'memory.cpp',
                  'simple_builtin.cpp',
+                 'simple_floatvec.cpp',
                  'simple_full.cpp']
 
 clang_libs_list = ['clangFrontendTool',

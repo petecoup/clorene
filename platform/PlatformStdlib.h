@@ -23,7 +23,21 @@
 #ifndef PLATFORM_STDLIB_H_
 #define PLATFORM_STDLIB_H_
 
-size_t get_global_id(size_t work_dim);
+// See http://clang.llvm.org/docs/LanguageExtensions.html for different
+//  available extensions that we use here.
+
+// define the variety of vector formats available (float2, float3, float4).
+typedef float float2 __attribute__((ext_vector_type(2)));
+typedef float float3 __attribute__((ext_vector_type(3)));
+typedef float float4 __attribute__((ext_vector_type(4)));
+
+typedef int int2 __attribute__((ext_vector_type(2)));
+typedef int int3 __attribute__((ext_vector_type(3)));
+typedef int int4 __attribute__((ext_vector_type(4)));
+
+// Now, define builtin functions.
+
+int get_global_id(int work_dim);
 
 #endif
 
