@@ -35,8 +35,7 @@ int get_global_id(int work_dim)
 void* lookup_function(const std::string& name)
 {
     if (name == "get_global_id") {
-        //Why is this cast needed?
-        return (void*)(int (*)(int))&get_global_id;
+        return (void*)&get_global_id;
     }
     std::cerr << "Did not find funtion " << name << std::endl;
     return NULL;
