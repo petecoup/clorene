@@ -25,8 +25,6 @@
 
 #include <string>
 
-int get_global_id();
-
 void* lookup_function(const std::string& name);
 
 #endif
