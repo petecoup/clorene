@@ -48,13 +48,16 @@ class FunctionRunner
 public:
     FunctionRunner(llvm::Module* module,
                    const std::string& functionName,
-                   llvm::LLVMContext& ctxt);
+                   llvm::LLVMContext& ctxt,
+                   bool linkStdlib = false);
 
     FunctionRunner(const std::string& moduleName,
                    const std::string& functionName,
-                   llvm::LLVMContext& ctxt);
+                   llvm::LLVMContext& ctxt,
+                   bool linkStdlib = false);
 
-    FunctionRunner(Kernel* kernel);
+    FunctionRunner(Kernel* kernel,
+                   bool linkStdlib = false);
 
     void setArgs(std::vector<llvm::GenericValue> args);
     void resetArgs();
@@ -71,6 +74,7 @@ private:
     llvm::Function* function_;
     std::string functionName_;
     std::vector<llvm::GenericValue> args_;
+    bool linkStdlib_;
 };
 
 }

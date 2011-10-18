@@ -24,11 +24,14 @@ runtime_srcs = ['Engine.cpp',
                 'FunctionRunner.cpp',
                 'Worker.cpp']
 unittest_srcs = ['api_full.cpp',
+                 'common_functions.cpp',
                  'driver.cpp',
                  'memory.cpp',
                  'simple_builtin.cpp',
                  'simple_floatvec.cpp',
                  'simple_full.cpp']
+
+platform_srcs = ['CommonFunctions.cl']
 
 clang_libs_list = ['clangFrontendTool',
                    'clangFrontend',
@@ -57,6 +60,7 @@ llvm_packages = ['jit',
                  'codegen',
                  'bitreader',
                  'bitwriter',
+                 'linker',
                  'native']
 
 def options(opt):

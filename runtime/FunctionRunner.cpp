@@ -24,6 +24,7 @@
 
 #include <llvm/LLVMContext.h>
 #include <llvm/Module.h>
+#include <llvm/Linker.h>
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/ExecutionEngine/Interpreter.h>
@@ -31,6 +32,7 @@
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
 #include <llvm/Support/TargetSelect.h>
+#include <llvm/Support/Path.h>
 #include <llvm/Support/system_error.h>
 #include <llvm/ADT/OwningPtr.h>
 
@@ -44,9 +46,11 @@ namespace clorene
 
 FunctionRunner::FunctionRunner(llvm::Module* module,
                                const std::string& functionName,
-                               llvm::LLVMContext& ctxt) :
+                               llvm::LLVMContext& ctxt,
+                               bool linkStdlib) :
     module_(module),
-    functionName_(functionName)
+    functionName_(functionName),
+    linkStdlib_(linkStdlib)
 {
     init();
     initEngineAndFunction();
@@ -54,8 +58,10 @@ FunctionRunner::FunctionRunner(llvm::Module* module,
 
 FunctionRunner::FunctionRunner(const std::string& moduleName,
                                const std::string& functionName,
-                               llvm::LLVMContext& ctxt) :
-    functionName_(functionName)
+                               llvm::LLVMContext& ctxt,
+                               bool linkStdlib) :
+    functionName_(functionName),
+    linkStdlib_(linkStdlib)
 {
     init();
     llvm::OwningPtr<llvm::MemoryBuffer> bufptr;
@@ -70,10 +76,12 @@ FunctionRunner::FunctionRunner(const std::string& moduleName,
     initEngineAndFunction();
 }
 
-FunctionRunner::FunctionRunner(Kernel* kernel) :
+FunctionRunner::FunctionRunner(Kernel* kernel,
+                               bool linkStdlib) :
     module_(kernel->getModule()),
     function_(kernel->getFunction()),
-    args_(kernel->getArgs())
+    args_(kernel->getArgs()),
+    linkStdlib_(linkStdlib)
 {
     init();
     initEngine();
@@ -82,6 +90,22 @@ FunctionRunner::FunctionRunner(Kernel* kernel) :
 void
 FunctionRunner::initEngine()
 {
+    if (linkStdlib_) {
+        llvm::Linker linker("program", module_);
+
+        bool native;
+        llvm::sys::Path mypath;
+        mypath.set("stdlib.bc");
+
+        //Linker returns false on success.
+        if (!linker.LinkInFile(mypath, native)) {
+            module_ = linker.releaseModule();
+        } else {
+            //Error in linking.
+            std::cerr << "Error linking module." << std::endl;
+        }
+    }
+
     engine_ = llvm::ExecutionEngine::createJIT(module_);
 
     if (!engine_) {
