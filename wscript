@@ -31,7 +31,7 @@ unittest_srcs = ['api_full.cpp',
                  'simple_floatvec.cpp',
                  'simple_full.cpp']
 
-platform_srcs = ['CommonFunctions.cl']
+platform_srcs = ['CommonFunctions']
 
 clang_libs_list = ['clangFrontendTool',
                    'clangFrontend',
@@ -84,6 +84,10 @@ def build(bld):
 
     unittest_list = ' test/unit/'+' test/unit/'.join(unittest_srcs)
 
+    for s in platform_srcs:
+        obj = bld(rule='clang ${SRC} -c -emit-llvm -o ${TGT}',
+                  source='platform/'+s+'.cl', target=s+'.bc')
+    
     obj = bld(features='cxx cxxshlib',
               source=src_list,
               target='OpenCL',
