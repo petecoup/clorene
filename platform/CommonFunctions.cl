@@ -22,30 +22,117 @@
 
 #include "PlatformStdlib.h"
 
+// max -----------------------------------------------------------------------
+
+float CLANG_OVERLOADABLE max(float x, float y)
+{
+    return (x > y ? x : y);
+}
+
 float2 CLANG_OVERLOADABLE max(float2 x, float2 y)
 {
     float2 result;
-    result[0] = x[0] > y[0] ? x[0] : y[0];
-    result[1] = x[1] > y[1] ? x[1] : y[1];
+    int i = 0;
+    for(i = 0;i < 2;i++) {
+        result[i] = max(x[i], y[i]);
+    }
     return result;
 }
 
 float3 CLANG_OVERLOADABLE max(float3 x, float3 y)
 {
     float3 result;
-    result[0] = x[0] > y[0] ? x[0] : y[0];
-    result[1] = x[1] > y[1] ? x[1] : y[1];
-    result[2] = x[2] > y[2] ? x[2] : y[2];
+    int i = 0;
+    for(i = 0;i < 3;i++) {
+        result[i] = max(x[i], y[i]);
+    }
     return result;
 }
 
 float4 CLANG_OVERLOADABLE max(float4 x, float4 y)
 {
     float4 result;
-    result[0] = x[0] > y[0] ? x[0] : y[0];
-    result[1] = x[1] > y[1] ? x[1] : y[1];
-    result[2] = x[2] > y[2] ? x[2] : y[2];
-    result[3] = x[3] > y[3] ? x[3] : y[3];
+    int i = 0;
+    for(i = 0;i < 4;i++) {
+        result[i] = max(x[i], y[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE max(float8 x, float8 y)
+{
+    float8 result;
+    int i = 0;
+    for(i = 0;i < 8;i++) {
+        result[i] = max(x[i], y[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE max(float16 x, float16 y)
+{
+    float16 result;
+    int i = 0;
+    for(i = 0;i < 16;i++) {
+        result[i] = max(x[i], y[i]);
+    }
+    return result;
+}
+
+// min -----------------------------------------------------------------------
+
+float CLANG_OVERLOADABLE min(float x, float y)
+{
+    return (x < y ? x : y);
+}
+
+float2 CLANG_OVERLOADABLE min(float2 x, float2 y)
+{
+    float2 result;
+    int i = 0;
+    for(i = 0;i < 2;i++) {
+        result[i] = min(x[i], y[i]);
+    }
+    return result;
+}
+
+float3 CLANG_OVERLOADABLE min(float3 x, float3 y)
+{
+    float3 result;
+    int i = 0;
+    for(i = 0;i < 3;i++) {
+        result[i] = min(x[i], y[i]);
+    }
+    return result;
+}
+
+float4 CLANG_OVERLOADABLE min(float4 x, float4 y)
+{
+    float4 result;
+    int i = 0;
+    for(i = 0;i < 4;i++) {
+        result[i] = min(x[i], y[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE min(float8 x, float8 y)
+{
+    float8 result;
+    int i = 0;
+    for(i = 0;i < 8;i++) {
+        result[i] = min(x[i], y[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE min(float16 x, float16 y)
+{
+    float16 result;
+    int i = 0;
+    for(i = 0;i < 16;i++) {
+        result[i] = min(x[i], y[i]);
+    }
     return result;
 }
 

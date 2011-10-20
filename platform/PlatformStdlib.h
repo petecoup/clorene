@@ -30,6 +30,8 @@
 typedef float float2 __attribute__((ext_vector_type(2)));
 typedef float float3 __attribute__((ext_vector_type(3)));
 typedef float float4 __attribute__((ext_vector_type(4)));
+typedef float float8 __attribute__((ext_vector_type(8)));
+typedef float float16 __attribute__((ext_vector_type(16)));
 
 typedef int int2 __attribute__((ext_vector_type(2)));
 typedef int int3 __attribute__((ext_vector_type(3)));
@@ -55,18 +57,24 @@ float3 CLANG_OVERLOADABLE degrees(float3 radians);
 float4 CLANG_OVERLOADABLE degrees(float4 radians);
 
 //max
+float CLANG_OVERLOADABLE max(float x, float y);
 float2 CLANG_OVERLOADABLE max(float2 x, float2 y);
 float3 CLANG_OVERLOADABLE max(float3 x, float3 y);
 float4 CLANG_OVERLOADABLE max(float4 x, float4 y);
+float8 CLANG_OVERLOADABLE max(float8 x, float8 y);
+float16 CLANG_OVERLOADABLE max(float16 x, float16 y);
 
 float2 CLANG_OVERLOADABLE max(float2 x, float y);
 float3 CLANG_OVERLOADABLE max(float3 x, float y);
 float4 CLANG_OVERLOADABLE max(float4 x, float y);
 
 //min
+float CLANG_OVERLOADABLE min(float x, float y);
 float2 CLANG_OVERLOADABLE min(float2 x, float2 y);
 float3 CLANG_OVERLOADABLE min(float3 x, float3 y);
 float4 CLANG_OVERLOADABLE min(float4 x, float4 y);
+float8 CLANG_OVERLOADABLE min(float8 x, float8 y);
+float16 CLANG_OVERLOADABLE min(float16 x, float16 y);
 
 float2 CLANG_OVERLOADABLE min(float2 x, float y);
 float3 CLANG_OVERLOADABLE min(float3 x, float y);

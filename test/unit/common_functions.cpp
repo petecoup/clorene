@@ -133,3 +133,45 @@ TEST_F(CommonFunctionsTest, Max4Test)
     EXPECT_EQ(resultv_[3], 30.0);    
 }
 
+TEST_F(CommonFunctionsTest, Min2Test)
+{
+    fullProgram_ = program_ + std::string(
+                            " r2 = min(f2,g2);\n"
+                            " rv[0] = r2[0]; rv[1] = r2[1]; }\n" );
+
+    buildAndExecute();
+
+    EXPECT_EQ(resultv_[0], 1.0);
+    EXPECT_EQ(resultv_[1], 3.0);
+    EXPECT_EQ(resultv_[2], 0.0);
+    EXPECT_EQ(resultv_[3], 0.0);
+}
+
+TEST_F(CommonFunctionsTest, Min3Test)
+{
+    fullProgram_ = program_+ std::string(
+                             " r3 = min(f3,g3);\n"
+                             " rv[0] = r3[0]; rv[1] = r3[1];\n"
+                             " rv[2] = r3[2];}\n" );
+    buildAndExecute();
+
+    EXPECT_EQ(resultv_[0], 1.0);
+    EXPECT_EQ(resultv_[1], 3.0);
+    EXPECT_EQ(resultv_[2], 10.0);
+    EXPECT_EQ(resultv_[3], 0.0);    
+}
+
+TEST_F(CommonFunctionsTest, Min4Test)
+{
+    fullProgram_ = program_+ std::string(
+                             " r4 = min(f4,g4);\n"
+                             " rv[0] = r4[0]; rv[1] = r4[1];\n"
+                             " rv[2] = r4[2]; rv[3] = r4[3]; }\n" );
+    buildAndExecute();
+
+    EXPECT_EQ(resultv_[0], 1.0);
+    EXPECT_EQ(resultv_[1], 3.0);
+    EXPECT_EQ(resultv_[2], 10.0);
+    EXPECT_EQ(resultv_[3], 16.0);    
+}
+
