@@ -84,6 +84,11 @@ def build(bld):
 
     unittest_list = ' test/unit/'+' test/unit/'.join(unittest_srcs)
 
+    # make the embedded PlatformStdlib.opencl.h header.
+    obj = bld(rule='python ${SRC} ${TGT}',
+              source='tools/embed_file_as_string.py platform/PlatformStdlib.h',
+              target='platform/PlatformStdlib.opencl.h')
+
     bc_list = []
     for s in platform_srcs:
         obj = bld(rule='clang ${SRC} -c -emit-llvm -o ${TGT}',
