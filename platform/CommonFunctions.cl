@@ -22,6 +22,11 @@
 
 #include "PlatformStdlib.h"
 
+float CLANG_OVERLOADABLE degrees(float radians)
+{
+    return (radians * 180.0) / M_PI_F;
+}
+
 // max -----------------------------------------------------------------------
 
 float CLANG_OVERLOADABLE max(float x, float y)

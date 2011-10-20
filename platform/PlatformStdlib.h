@@ -37,6 +37,21 @@ typedef int int2 __attribute__((ext_vector_type(2)));
 typedef int int3 __attribute__((ext_vector_type(3)));
 typedef int int4 __attribute__((ext_vector_type(4)));
 
+// Math Constants
+#define M_E_F        2.71828182846
+#define M_LOG2E_F    1.44269504089
+#define M_LOG10E_F   0.434294481903
+#define M_LN2_F      0.69314718056
+#define M_LN10_F     2.30258509299
+#define M_PI_F       3.14159265359
+#define M_PI_2_F     1.57079632679
+#define M_PI_4_F     0.785398163397
+#define M_1_PI_F     0.318309886184
+#define M_2_PI_F     0.636619772368
+#define M_2_SQRTPI_F 1.1283791671
+#define M_SQRT2_F    1.41421356237
+#define M_SQRT1_2_F  0.707106781187
+
 // Now, define builtin functions.
 
 #define CLANG_OVERLOADABLE __attribute__((overloadable))

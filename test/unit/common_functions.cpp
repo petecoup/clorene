@@ -28,7 +28,6 @@
 
 #include "program/Compiler.h"
 #include "runtime/FunctionRunner.h"
-#include "runtime/Engine.h"
 
 class CommonFunctionsTest: public ::testing::Test
 {
@@ -72,10 +71,7 @@ protected:
         clorene::FunctionRunner runner(module, "funcexec", ctxt_, true);
 
         runner.setArgs(args_);
-
-        clorene::Engine e(1);
-        e.addWorker(&runner, 1);
-        e.waitForIdle();
+        runner.run();
     }
 
     llvm::LLVMContext ctxt_;
