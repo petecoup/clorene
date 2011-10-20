@@ -29,7 +29,7 @@
 #include "program/Compiler.h"
 #include "runtime/FunctionRunner.h"
 
-class CommonFunctionsTest: public ::testing::Test
+class CommonFunctionsTest : public ::testing::Test
 {
 protected:
     virtual void SetUp()
@@ -42,8 +42,8 @@ protected:
         valy_[1] = 3.0;
         valy_[2] = 20.0;
         valy_[3] = 30.0;
+        
         resultv_[0] = resultv_[1] = resultv_[2] = resultv_[3] = 0.0;
-        fconst = 12.0;
 
         program_ = "void funcexec(float* a, float* b, float* rv) {\n"
                    " float2 f2; float3 f3; float4 f4;\n"
@@ -80,10 +80,7 @@ protected:
     float valx_[4];
     float valy_[4];
     float resultv_[4];
-    float result_;
     
-    float fconst;
-
     std::vector<llvm::GenericValue> args_;
 };
 

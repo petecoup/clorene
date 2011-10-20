@@ -191,3 +191,60 @@ float16 CLANG_OVERLOADABLE min(float16 x, float16 y)
     return result;
 }
 
+// mix -----------------------------------------------------------------------
+
+float CLANG_OVERLOADABLE mix(float x, float y, float a)
+{
+    return x + (y - x)*a;
+}
+
+float2 CLANG_OVERLOADABLE mix(float2 x, float2 y, float2 a)
+{
+    float2 result;
+    int i = 0;
+    for(i = 0;i < 2;i++) {
+        result[i] = mix(x[i], y[i], a[i]);
+    }
+    return result;
+}
+
+float3 CLANG_OVERLOADABLE mix(float3 x, float3 y, float3 a)
+{
+    float3 result;
+    int i = 0;
+    for(i = 0;i < 3;i++) {
+        result[i] = mix(x[i], y[i], a[i]);
+    }
+    return result;
+}
+
+float4 CLANG_OVERLOADABLE mix(float4 x, float4 y, float4 a)
+{
+    float4 result;
+    int i = 0;
+    for(i = 0;i < 4;i++) {
+        result[i] = mix(x[i], y[i], a[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE mix(float8 x, float8 y, float8 a)
+{
+    float8 result;
+    int i = 0;
+    for(i = 0;i < 8;i++) {
+        result[i] = mix(x[i], y[i], a[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE mix(float16 x, float16 y, float16 a)
+{
+    float16 result;
+    int i = 0;
+    for(i = 0;i < 16;i++) {
+        result[i] = mix(x[i], y[i], a[i]);
+    }
+    return result;
+}
+
