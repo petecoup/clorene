@@ -248,3 +248,121 @@ float16 CLANG_OVERLOADABLE mix(float16 x, float16 y, float16 a)
     return result;
 }
 
+// radians -------------------------------------------------------------------
+
+float CLANG_OVERLOADABLE radians(float degrees)
+{
+    return (M_PI_F * degrees) / 180.0f;
+}
+
+float2 CLANG_OVERLOADABLE radians(float2 degrees)
+{
+    float2 result;
+    int i = 0;
+    for (i = 0; i < 2; i++) {
+        result[i] = radians(degrees[i]);
+    }
+    return result;
+}
+
+float3 CLANG_OVERLOADABLE radians(float3 degrees)
+{
+    float3 result;
+    int i = 0;
+    for (i = 0; i < 3; i++) {
+        result[i] = radians(degrees[i]);
+    }
+    return result;
+}
+
+float4 CLANG_OVERLOADABLE radians(float4 degrees)
+{
+    float4 result;
+    int i = 0;
+    for (i = 0; i < 4; i++) {
+        result[i] = radians(degrees[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE radians(float8 degrees)
+{
+    float8 result;
+    int i = 0;
+    for (i = 0; i < 8; i++) {
+        result[i] = radians(degrees[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE radians(float16 degrees)
+{
+    float16 result;
+    int i = 0;
+    for (i = 0; i < 16; i++) {
+        result[i] = radians(degrees[i]);
+    }
+    return result;
+}
+
+// sign ----------------------------------------------------------------------
+
+// TODO: nan support
+float CLANG_OVERLOADABLE sign(float x)
+{
+    if (x == 0.0f) {
+        return 0.0f;
+    }
+    return (x > 0.0f ? 1.0f : -1.0f);
+}
+
+float2 CLANG_OVERLOADABLE sign(float2 x)
+{
+    float2 result;
+    int i = 0;
+    for (i = 0; i < 2; i++) {
+        result[i] = sign(x[i]);
+    }
+    return result;
+}
+
+float3 CLANG_OVERLOADABLE sign(float3 x)
+{
+    float3 result;
+    int i = 0;
+    for (i = 0; i < 3; i++) {
+        result[i] = sign(x[i]);
+    }
+    return result;
+}
+
+float4 CLANG_OVERLOADABLE sign(float4 x)
+{
+    float4 result;
+    int i = 0;
+    for (i = 0; i < 4; i++) {
+        result[i] = sign(x[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE sign(float8 x)
+{
+    float8 result;
+    int i = 0;
+    for (i = 0; i < 8; i++) {
+        result[i] = sign(x[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE sign(float16 x)
+{
+    float16 result;
+    int i = 0;
+    for (i = 0; i < 16; i++) {
+        result[i] = sign(x[i]);
+    }
+    return result;
+}
+
