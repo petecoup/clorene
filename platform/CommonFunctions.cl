@@ -24,7 +24,57 @@
 
 float CLANG_OVERLOADABLE degrees(float radians)
 {
-    return (radians * 180.0) / M_PI_F;
+    return (radians * 180.0f) / M_PI_F;
+}
+
+float2 CLANG_OVERLOADABLE degrees(float2 radians)
+{
+    float2 result;
+    int i = 0;
+    for (i = 0; i < 2; i++) {
+        result[i] = degrees(radians[i]);
+    }
+    return result;
+}
+
+float3 CLANG_OVERLOADABLE degrees(float3 radians)
+{
+    float3 result;
+    int i = 0;
+    for (i = 0; i < 3; i++) {
+        result[i] = degrees(radians[i]);
+    }
+    return result;
+}
+
+float4 CLANG_OVERLOADABLE degrees(float4 radians)
+{
+    float4 result;
+    int i = 0;
+    for (i = 0; i < 4; i++) {
+        result[i] = degrees(radians[i]);
+    }
+    return result;
+}
+
+float8 CLANG_OVERLOADABLE degrees(float8 radians)
+{
+    float8 result;
+    int i = 0;
+    for (i = 0; i < 8; i++) {
+        result[i] = degrees(radians[i]);
+    }
+    return result;
+}
+
+float16 CLANG_OVERLOADABLE degrees(float16 radians)
+{
+    float16 result;
+    int i = 0;
+    for (i = 0; i < 16; i++) {
+        result[i] = degrees(radians[i]);
+    }
+    return result;
 }
 
 // max -----------------------------------------------------------------------
