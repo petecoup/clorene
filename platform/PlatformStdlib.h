@@ -132,6 +132,9 @@ float2 CLANG_OVERLOADABLE step(float edge, float2 x);
 float3 CLANG_OVERLOADABLE step(float edge, float3 x);
 float4 CLANG_OVERLOADABLE step(float edge, float4 x);
 
+//Math Functions.
+float CLANG_OVERLOADABLE fmax(float x, float y);
+
 //Work-Item Functions
 int get_global_id(int work_dim);
 
