@@ -84,10 +84,15 @@ def build(bld):
 
     unittest_list = ' test/unit/'+' test/unit/'.join(unittest_srcs)
 
+    bc_list = []
     for s in platform_srcs:
         obj = bld(rule='clang ${SRC} -c -emit-llvm -o ${TGT}',
                   source='platform/'+s+'.cl', target=s+'.bc')
-    
+        bc_list.append(s+'.bc')
+
+    obj = bld(rule='llvm-ld -link-as-library -o ${TGT} ${SRC}',
+              source=bc_list, target='stdlib.bc')
+        
     obj = bld(features='cxx cxxshlib',
               source=src_list,
               target='OpenCL',
