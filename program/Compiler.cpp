@@ -20,11 +20,14 @@
  * THE SOFTWARE.
  */
 
+#include <iostream>
 
+#include <llvm/Support/Path.h>
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/Target/TargetOptions.h>
 #include <llvm/Support/Host.h>
 #include <llvm/Module.h>
+#include <llvm/Linker.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/TextDiagnosticPrinter.h>
 #include <clang/CodeGen/CodeGenAction.h>
@@ -85,6 +88,22 @@ Compiler::compile(const std::string& program_)
     clang::CodeGenAction* action = new clang::EmitLLVMOnlyAction();
     if (clang_->ExecuteAction(*action)) {
         llvm::Module* result = action->takeModule();
+
+        // now, link in the stdlib.
+        llvm::Linker linker("program", result);
+
+        bool native;
+        llvm::sys::Path mypath;
+        mypath.set("stdlib.bc");
+
+        //Linker returns false on success.
+        if (!linker.LinkInFile(mypath, native)) {
+            result = linker.releaseModule();
+        } else {
+            //Error in linking.
+            std::cerr << "Error linking module." << std::endl;
+        }
+
         return result;
     }
 

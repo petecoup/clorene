@@ -24,7 +24,6 @@
 
 #include <llvm/LLVMContext.h>
 #include <llvm/Module.h>
-#include <llvm/Linker.h>
 #include <llvm/Bitcode/ReaderWriter.h>
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/ExecutionEngine/Interpreter.h>
@@ -90,22 +89,6 @@ FunctionRunner::FunctionRunner(Kernel* kernel,
 void
 FunctionRunner::initEngine()
 {
-    if (linkStdlib_) {
-        llvm::Linker linker("program", module_);
-
-        bool native;
-        llvm::sys::Path mypath;
-        mypath.set("stdlib.bc");
-
-        //Linker returns false on success.
-        if (!linker.LinkInFile(mypath, native)) {
-            module_ = linker.releaseModule();
-        } else {
-            //Error in linking.
-            std::cerr << "Error linking module." << std::endl;
-        }
-    }
-
     engine_ = llvm::ExecutionEngine::createJIT(module_);
 
     if (!engine_) {
